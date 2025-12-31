@@ -1,5 +1,15 @@
-import {neon} from '@neondatabase/serverless'
+import postgres from "postgres";
 
-const sql = neon(`${process.env.DATABASE_URL}`);
+// Use DATABASE_URL from environment or default to local
+const connectionString =
+  process.env.DATABASE_URL ||
+  "postgresql://postgres:postgres@localhost:5432/quickai";
 
-export default sql; 
+// Parse connection string to handle SSL properly
+const sql = postgres(connectionString, {
+  ssl: {
+    rejectUnauthorized: false, // Required for Neon
+  },
+});
+
+export default sql;
